@@ -6,7 +6,7 @@ public class FindPair : MonoBehaviour
 {
     private bool search = false;
 
-    private Transform pair;
+    private List<GameObject> pair = new List<GameObject>();
 
     void Start()
     {
@@ -23,15 +23,16 @@ public class FindPair : MonoBehaviour
     {
         if (hit.collider.CompareTag("Player"))
         {
-
+            pair.Add(hit.gameObject);
         }
     }
+
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log(other.gameObject);
+            pair.Add(other.gameObject);
         }
     }
 }
