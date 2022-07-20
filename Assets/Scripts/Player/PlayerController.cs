@@ -7,6 +7,10 @@ public class PlayerController : MonoBehaviour
     [Header("スピード調整")]
     [SerializeField] private float spead = 5;
     [SerializeField] private float runSpeed = 8;
+    private float numspeed;
+
+    [Header("きびきび動かす場合増やす")]
+    [SerializeField] private float moveForceMultiplier = 500;
 
     [Header("マウスの感度")]
     [SerializeField] private float angleSpead = 100;
@@ -32,6 +36,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform stepRay;
 
     private Vector3 move;
+    private Vector3 subtractmove;
 
     private Rigidbody rb;
 
@@ -47,7 +52,6 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
     void Update()
     {
         if (play)
@@ -62,6 +66,10 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    private void FixedUpdate()
+    {
+        rb.AddForce(moveForceMultiplier * (subtractmove));
+    }
     //プレイヤーを動かす
     private void PlayerMove()
     {
@@ -69,7 +77,6 @@ public class PlayerController : MonoBehaviour
         float z = Input.GetAxis("Vertical");
         float y = Input.GetAxis("Mouse X");
 
-        float numspeed;
         float grv = 0;
 
         if (Input.GetKey(KeyCode.LeftShift))
@@ -99,17 +106,10 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (!checker.GetCheck())
-        {
-            grv = gravty;
-        }
-        else
-        {
-            grv = 0;
-        }
-        move = numspeed * new Vector3(x, grv, z);
+        move = new Vector3(x, 0, z);
+        move = move * numspeed;
         move = transform.TransformDirection(move);
-        rb.velocity = move;
+        subtractmove = new Vector3(move.x - rb.velocity.x, 0f, move.z - rb.velocity.z);
         transform.Rotate(0, y, 0);
     }
 
