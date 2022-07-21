@@ -21,19 +21,9 @@ public class PlayerController : MonoBehaviour
     [Header("重力の設定")]
     [SerializeField] private float gravty = 20;
 
-    [Header("登れる段差や角度")]
-    [SerializeField] private float stepOffset = 0.5f;
-    [SerializeField] private float slopeLimit = 65f;
-
-    [Header("段差などのためのレイ設定")]
-    [SerializeField] private float stepdistance = 0.5f;
-    [SerializeField] private float slopedistance = 1f;
-
     private bool runcheck = false;
     private bool moveCheck = true;
     private bool play = true;
-
-    [SerializeField] private Transform stepRay;
 
     private Vector3 move;
     private Vector3 subtractmove;
@@ -77,7 +67,6 @@ public class PlayerController : MonoBehaviour
         float z = Input.GetAxis("Vertical");
         float y = Input.GetAxis("Mouse X");
 
-        float grv = 0;
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
