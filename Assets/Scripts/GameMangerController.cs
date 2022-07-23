@@ -14,8 +14,6 @@ public class GameMangerController : MonoBehaviour
     [SerializeField] private float endTime = 60;
     private float nowTime = 0;
 
-    private static bool gameEnd = false;
-
     [SerializeField] private PlayableDirector endTimeline;
 
     [SerializeField] private SceneManagerController scene;
@@ -40,7 +38,6 @@ public class GameMangerController : MonoBehaviour
         nowTime += Time.deltaTime;
         if(endTime <= nowTime)
         {
-            gameEnd = true;
             player.TimeUp();
             StaticPoint();
             endTimeline.Play();

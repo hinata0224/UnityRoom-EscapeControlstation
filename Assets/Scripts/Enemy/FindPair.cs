@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FindPair : MonoBehaviour
 {
-    private bool search = false;
 
     private List<GameObject> pair = new List<GameObject>();
 
@@ -17,14 +16,6 @@ public class FindPair : MonoBehaviour
     void Update()
     {
         
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.collider.CompareTag("Player"))
-        {
-            pair.Add(hit.gameObject);
-        }
     }
 
 

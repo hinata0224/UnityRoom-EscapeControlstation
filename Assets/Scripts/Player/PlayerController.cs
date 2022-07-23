@@ -18,19 +18,25 @@ public class PlayerController : MonoBehaviour
     [Header("スタミナ上限")]
     [SerializeField] private float stamina = 50;
 
-    [Header("重力の設定")]
-    [SerializeField] private float gravty = 20;
+    [Header("エネルギー弾のチャージ時間")]
+    [SerializeField] private float chageTime = 5f;
+    private float nowChageTime = 0f;
 
     private bool runcheck = false;
     private bool moveCheck = true;
+    private bool chagebullet = false;
     private bool play = true;
 
     private Vector3 move;
     private Vector3 subtractmove;
 
+    [Header("エネルギー弾を生成する場所")]
+    [SerializeField] private Transform bulletpos;
+
     private Rigidbody rb;
 
-    [SerializeField] private GroundChecker checker;
+    [SerializeField] private BulletController bullet;
+    private BulletController createBullet;
 
     private void Awake()
     {
@@ -48,7 +54,11 @@ public class PlayerController : MonoBehaviour
         {
             if (moveCheck)
             {
-                PlayerMove();
+                if (!chagebullet)
+                {
+                    PlayerMove();
+                }
+                Attack();
             }
             else
             {
@@ -65,7 +75,7 @@ public class PlayerController : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        float y = Input.GetAxis("Mouse X");
+        float y = Input.GetAxis("Mouse X") * angleSpead * Time.deltaTime;
 
 
         if (Input.GetKey(KeyCode.LeftShift))
@@ -111,10 +121,33 @@ public class PlayerController : MonoBehaviour
         }
         moveCheck = true;
     }
-
+    
+    //攻撃
     private void Attack()
     {
-
+        if((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.E)) && createBullet == null)
+        {
+            createBullet = bullet.CreateBullet(bulletpos,this.transform);
+            chagebullet = true;
+        }
+        if(Input.GetMouseButton(0) || Input.GetKey(KeyCode.E))
+        {
+            nowChageTime += Time.deltaTime;
+        }
+        if(Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.E))
+        {
+            if(nowChageTime >= chageTime)
+            {
+                bullet.ShotBullet(true,createBullet);
+            }
+            else
+            {
+                bullet.ShotBullet(false,createBullet);
+            }
+            createBullet = null;
+            chagebullet = false;
+            nowChageTime = 0;
+        }
     }
 
     //タイムアップ

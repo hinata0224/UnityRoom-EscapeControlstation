@@ -13,6 +13,8 @@ public class AIController : MonoBehaviour
 {
     [SerializeField] private KindOfStates states;
 
+    [SerializeField] private int hp = 2;
+
     [SerializeField] private float witeTime = 3;
     [SerializeField] private float searceAngle = 130f;
 
@@ -20,6 +22,7 @@ public class AIController : MonoBehaviour
 
     private bool search = false;
     private bool move = false;
+    private bool dead = false;
 
     private Transform pos;
 
@@ -39,7 +42,14 @@ public class AIController : MonoBehaviour
 
     void Update()
     {
-        ToMove();
+        if (!dead)
+        {
+            ToMove();
+        }
+        else
+        {
+            Dead();
+        }
     }
 
     //AIÇÃìÆÇ´
@@ -95,5 +105,22 @@ public class AIController : MonoBehaviour
         {
             search = true;
         }
+    }
+
+    //É{Å[ÉãÇ…ìñÇΩÇ¡ÇΩÇÁ
+    public void Hit(int damege)
+    {
+        hp -= damege;
+        Debug.Log(hp);
+        if(hp <= 0)
+        {
+            dead = true;
+        }
+    }
+
+    //HPÇ™0Ç…Ç»Ç¡ÇΩÇÁ
+    void Dead()
+    {
+        Destroy(this.gameObject);
     }
 }
