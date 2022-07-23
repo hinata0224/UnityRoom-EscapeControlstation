@@ -3,15 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum KindOfStates
-{
-    Enemy,
-    Ally
-}
-
 public class AIController : MonoBehaviour
 {
-    [SerializeField] private KindOfStates states;
 
     [SerializeField] private int hp = 2;
 
@@ -21,6 +14,7 @@ public class AIController : MonoBehaviour
     private float nowtime = 0;
 
     private bool search = false;
+    private bool target = false;
     private bool move = false;
     private bool dead = false;
 
@@ -30,9 +24,12 @@ public class AIController : MonoBehaviour
 
     [SerializeField] private SelectPos spos;
 
+    private GameObject player;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Start()
@@ -55,7 +52,20 @@ public class AIController : MonoBehaviour
     //AI‚Ì“®‚«
     void ToMove()
     {
-        if (!search)
+        if (target)
+        {
+            var positionDiff = player.transform.position - transform.position;
+            var angle = Vector3.Angle(transform.forward, positionDiff);
+            if (angle <= searceAngle)
+            {
+                AgentMove(agent, player.transform);
+            }
+            else
+            {
+                move = false;
+            }
+        }
+        else
         {
             if (!move)
             {
@@ -83,10 +93,6 @@ public class AIController : MonoBehaviour
                 }
             }
         }
-        else
-        {
-
-        }
     }
     //agent‚Å“®‚©‚·
     void AgentMove(NavMeshAgent agent,Transform pos)
@@ -97,21 +103,30 @@ public class AIController : MonoBehaviour
         }
     }
     //Ž‹ŠE‚É“ü‚Á‚½‚ç
-    void ViewEnemy()
+    void ViewPlayer()
     {
-        var positionDiff = pos.transform.position - transform.position;
-        var angle = Vector3.Angle(transform.forward, positionDiff);
-        if (angle <= searceAngle)
-        {
-            search = true;
-        }
+
+        //else
+        //{
+        //    search = false;
+        //}
+    }
+
+    //”ÍˆÍ‚É“ü‚Á‚½‚ç
+    public void InPlayer()
+    {
+        target = true;
+    }
+    public void OutPlaer()
+    {
+        target = false;
+        move = false;
     }
 
     //ƒ{[ƒ‹‚É“–‚½‚Á‚½‚ç
     public void Hit(int damege)
     {
         hp -= damege;
-        Debug.Log(hp);
         if(hp <= 0)
         {
             dead = true;
