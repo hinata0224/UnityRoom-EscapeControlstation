@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
 
     private bool runcheck = false;
     private bool moveCheck = true;
+    private bool staminaCheck = false;
     private bool chagebullet = false;
     private bool play = true;
     private bool dead = false;
@@ -53,11 +54,14 @@ public class PlayerController : MonoBehaviour
     [Header("リスポーン地点")]
     [SerializeField] private Transform respawn;
 
+    private Animator animator;
+
     private BulletController createBullet;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
         nowenerrgy = energy;
         stamina = maxStamin;
     }
@@ -97,18 +101,40 @@ public class PlayerController : MonoBehaviour
             x = Input.GetAxis("Horizontal");
             z = Input.GetAxis("Vertical");
             y = Input.GetAxis("Mouse X") * angleSpead * Time.deltaTime;
-        }
+            if (Input.GetKey(KeyCode.LeftShift) && !staminaCheck)
+            {
+                numspeed = runSpeed;
+                runcheck = true;
+            }
+            else
+            {
+                numspeed = spead;
+                runcheck = false;
+            }
 
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            numspeed = runSpeed;
-            runcheck = true;
         }
         else
         {
-            numspeed = spead;
             runcheck = false;
+        }
+
+        if(x != 0 || z != 0)
+        {
+            if (runcheck)
+            {
+                animator.SetBool("Run", true);
+                animator.SetBool("Walk", false);
+            }
+            else
+            {
+                animator.SetBool("Run", false);
+                animator.SetBool("Walk", true);
+            }
+        }
+        else
+        {
+            animator.SetBool("Run", false);
+            animator.SetBool("Walk", false);
         }
 
         if (runcheck)
@@ -117,16 +143,21 @@ public class PlayerController : MonoBehaviour
             {
                 stamina -= 3 * Time.deltaTime;
             }
-            if(stamina <= 0)
+            else
             {
                 runcheck = false;
+                staminaCheck = true;
             }
         }
         else
         {
-            if(stamina < 50)
+            if (stamina < 50)
             {
                 stamina += 2 * Time.deltaTime;
+            }
+            else
+            {
+                staminaCheck = false;
             }
         }
 

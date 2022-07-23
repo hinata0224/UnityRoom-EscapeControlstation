@@ -11,9 +11,10 @@ public class AIController : MonoBehaviour
     [SerializeField] private float witeTime = 3;
     [SerializeField] private float searceAngle = 130f;
 
+    private float deadTime = 0f;
+
     private float nowtime = 0;
 
-    private bool search = false;
     private bool target = false;
     private bool move = false;
     private bool dead = false;
@@ -23,6 +24,8 @@ public class AIController : MonoBehaviour
     private NavMeshAgent agent;
 
     [SerializeField] private SelectPos spos;
+
+    [SerializeField] private Animator animator;
 
     private GameObject player;
 
@@ -100,16 +103,12 @@ public class AIController : MonoBehaviour
         if(agent.pathStatus != NavMeshPathStatus.PathInvalid)
         {
             agent.destination = pos.transform.position;
+            animator.SetBool("Walk", true);
         }
-    }
-    //‹ŠE‚É“ü‚Á‚½‚ç
-    void ViewPlayer()
-    {
-
-        //else
-        //{
-        //    search = false;
-        //}
+        else
+        {
+            animator.SetBool("Walk", false);
+        }
     }
 
     //”ÍˆÍ‚É“ü‚Á‚½‚ç
@@ -136,6 +135,17 @@ public class AIController : MonoBehaviour
     //HP‚ª0‚É‚È‚Á‚½‚ç
     void Dead()
     {
-        Destroy(this.gameObject);
+        deadTime += Time.deltaTime;
+        animator.SetBool("Dead", true);
+        if (deadTime >= 3f)
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
+    //Selectposs‚ğİ’è
+    public void SetSelectPos(SelectPos select)
+    {
+        spos = select;
     }
 }
