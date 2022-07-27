@@ -48,6 +48,7 @@ public class AIController : MonoBehaviour
         }
         else
         {
+            StopMove();
             Dead();
         }
     }
@@ -96,6 +97,12 @@ public class AIController : MonoBehaviour
                 }
             }
         }
+    }
+
+    //AI‚ðŽ~‚ß‚é
+    void StopMove()
+    {
+        agent.isStopped = true;
     }
     //agent‚Å“®‚©‚·
     void AgentMove(NavMeshAgent agent,Transform pos)
@@ -147,5 +154,11 @@ public class AIController : MonoBehaviour
     public void SetSelectPos(SelectPos select)
     {
         spos = select;
+    }
+
+    //AI‚ªŽ€‚ñ‚Å‚é‚©Šm”F
+    public bool GetDead()
+    {
+        return dead;
     }
 }

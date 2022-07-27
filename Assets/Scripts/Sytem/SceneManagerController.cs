@@ -31,9 +31,13 @@ public class SceneManagerController : MonoBehaviour
         SceneManager.LoadSceneAsync("Clear",LoadSceneMode.Single);
     }
 
+    public void GoLoser()
+    {
+        SceneManager.LoadSceneAsync("Loose", LoadSceneMode.Single);
+    }
+
     public void ExitGame()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
         Application.Quit();
     }
 }

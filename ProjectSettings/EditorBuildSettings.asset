@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Main.unity
     guid: 9394eb2aec2c8ca4e9cc05396920f4d2
   - enabled: 1
+    path: Assets/Scenes/Loose.unity
+    guid: f650040f153ca9c469ba92d7b4ba64d7
+  - enabled: 1
     path: Assets/Scenes/Clear.unity
     guid: a4738b5eb4c766d47a0cdf268eefc23c
   m_configObjects: {}

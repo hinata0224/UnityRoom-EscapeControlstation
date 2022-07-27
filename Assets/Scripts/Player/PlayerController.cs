@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -53,6 +54,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("リスポーン地点")]
     [SerializeField] private Transform respawn;
+
+    [Header("プレイヤーのCinemaChine")]
+    [SerializeField] private CinemachineVirtualCamera cinema;
 
     private Animator animator;
 
@@ -226,10 +230,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //タイムアップ
-    public void TimeUp()
+    public bool GetDead()
     {
-        play = !play;
+        return dead;
     }
 
     //プレイヤーの当たり判定
@@ -237,14 +240,17 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            hp -= 1;
-            if(hp <= 0)
+            if (!collision.gameObject.GetComponent<AIController>().GetDead())
             {
-                dead = true;
-            }
-            else
-            {
-                transform.position = respawn.position;
+                hp -= 1;
+                if (hp <= 0)
+                {
+                    dead = true;
+                }
+                else
+                {
+                    StartCoroutine(KillCamera(collision.gameObject));
+                }
             }
         }
         else if (collision.gameObject.CompareTag("Key"))
@@ -275,5 +281,21 @@ public class PlayerController : MonoBehaviour
     public float GetEenergy()
     {
         return nowenerrgy;
+    }
+
+    IEnumerator KillCamera(GameObject obj)
+    {
+        transform.position = respawn.position;
+        rb.useGravity = false;
+        gameObject.GetComponent<Collider>().isTrigger = true;
+        float time = 3f;
+        while(time > 0)
+        {
+            time--;
+            yield return new WaitForSeconds(1);
+        }
+        gameObject.GetComponent<Collider>().isTrigger = false;
+        rb.useGravity = true;
+
     }
 }

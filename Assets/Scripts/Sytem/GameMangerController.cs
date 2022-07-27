@@ -9,24 +9,21 @@ public class GameMangerController : MonoBehaviour
     [SerializeField] private int necessaryKey = 3;
     private int key = 0;
 
-    private static int allyp;
-    private static int enemyp;
-
     [SerializeField] private float endTime = 60;
     private float nowTime = 0;
 
     [Header("クリアポータルの場所")]
     [SerializeField] private GameObject clearPos;
 
-    [SerializeField] private PlayableDirector endTimeline;
-
     [SerializeField] private SceneManagerController scene;
     [SerializeField] private PlayerController player;
 
+    private SceneManagerController scenemanager;
+
     private void Awake()
     {
-        endTimeline.Pause();
         clearPos.SetActive(false);
+        scenemanager = GetComponent<SceneManagerController>();
     }
     void Start()
     {
@@ -35,23 +32,20 @@ public class GameMangerController : MonoBehaviour
 
     void Update()
     {
-        LimitTime();
+        Rezult();
         GetKey();
     }
 
     //clear後のタイムライン
-    void LimitTime()
+    void Rezult()
     {
-        //nowTime += Time.deltaTime;
-        //if(endTime <= nowTime)
-        //{
-        //    player.TimeUp();
-        //    StaticPoint();
-        //    endTimeline.Play();
-        //}
         if(key == necessaryKey)
         {
             clearPos.SetActive(true);
+        }
+        if (player.GetDead())
+        {
+            scenemanager.GoLoser();
         }
     }
     //鍵のゲット

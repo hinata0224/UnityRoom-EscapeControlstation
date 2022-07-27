@@ -27,4 +27,10 @@ public class CameraController : MonoBehaviour
         angle = Mathf.Clamp(rotate + y, minMaxAngle.x, minMaxAngle.y);
         transform.localEulerAngles = new Vector3(angle, 0, 0);
     }
+
+    public void OutCursor()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.None;
+    }
 }
